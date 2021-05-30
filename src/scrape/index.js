@@ -2,7 +2,7 @@
 
 const puppeteer = require('puppeteer');
 
-const convertMana = import ('./convertMana');
+//let convertMana = import ('./convertMana');
 
 // URLs to scrape
 const decentraland = 'https://nftfi.com/app/lend/assets?category=0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d';
