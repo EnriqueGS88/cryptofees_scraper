@@ -1,10 +1,10 @@
-
-
-// Get 1 NFT ID and send it to NFT Bank Estimates to calculate 1 Loan
+// Get All Decentraland LAND NFTs from nftfi.com and pass them to NFT Bank Estimates
+// Use NFT Bank estimates to calculate loans
 
 const puppeteer = require('puppeteer');
-
-//let convertMana = import ('./convertMana');
+const convertMana = require('./convertMana');
+const convertUSD = require('./convertUSD');
+const loanProposal = require('./loanProposal');
 
 // URLs to scrape
 const decentraland = 'https://nftfi.com/app/lend/assets?category=0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d';
@@ -16,60 +16,19 @@ const dcSelector = '#root > div > div > div:nth-child(5) > main > ul > li:nth-ch
 
 // Convert functions to handle the API responses within Puppeteer browser
 
-
-let convertMana = (str) => {
-    let value = str.replace(",","");
-    return Number(value);
-};
-
-let convertUSD = (value) => {
-    let index1 = value.search(/\$/);
-    let index2 = value.search(/\)/);
-    let temp = value.substring(index1+1,index2);
-    let usd = temp.replace(",","");
-
-    return Number(usd);
-}
-
-let loanProposal = (usd) => {
-    let commission = 0.02;
-    let collateral = 0.5;
-    let loan = (collateral-commission)*usd;
-
-    return loan;
-}
-
-let addNftID = (str) => {
-
-    //let nftID = loansArray[index];
-    let nftID = str+1;
-    return nftID;
-
-}
-
-
 let currentNftID = () => {
 
     return nftIDs[nftIDs.length-1];
 
 }
 
-
-let nftIDs = [];
-
+let nftIDs = []; // use it to store the Decentraland ID being queried in For loop in NFT Bank scraper
 
 
-
-
-
-
-
-
+// Main Async function to scrape both sites
 
 async function getNFT(){
 
-    //let index = "";
-    //debugger;
 
     const browser = await puppeteer.launch(
         
@@ -95,8 +54,9 @@ async function getNFT(){
 
     await page.waitForSelector('a[class="asset__link"]')
  
-    const dcClass = 'a[class="asset__link"]';
-    let parcelID = []
+
+
+    let parcelID = []; // use it to parse the Decentraland LAND NFTs in nftfi.com scraper
 
     let nodeList = await page.$$('ul[class="assets"]>li');
 
@@ -110,17 +70,13 @@ async function getNFT(){
 
     }
     console.log(parcelID);
-    //debugger;
-
 
     
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     // Open a new page to scrape NFT Bank
     const page2 = await browser.newPage();
     
+    // Intercept calls that load image, styles and font to improve bot performance
     await page.setRequestInterception(true);
 
     page.on('request', (request) => {
@@ -132,9 +88,9 @@ async function getNFT(){
         }
     })
     
+
     await page2.goto(nftBank);
-    
-    
+        
     // Enter Decentraland LAND (NFT ID) to be searched for in NFT Bank
     await page2.waitForSelector('input[class="MultiSearch__SearchInput-vmef37-4 WKTfL"]');
 
@@ -149,26 +105,24 @@ async function getNFT(){
     await page2.exposeFunction('loanProposal',(str) =>
     loanProposal(str));
 
-    await page2.exposeFunction('addNftID',(str) =>
-    addNftID(str));
-
     await page2.exposeFunction('currentNftID',() =>
     currentNftID());
-
     
     
-    let loansArray = [];
-
+    let loansArray = []; // use it to store the NFT Bank estimates from For loop
     
     for (let index of parcelID ) {
 
-    await page2.type('input[class="MultiSearch__SearchInput-vmef37-4 WKTfL"]',index);
+    nftIDs.push(index); // push the Decentraland ID of the current loop into a global variable
 
+
+    await page2.type('input[class="MultiSearch__SearchInput-vmef37-4 WKTfL"]',index);
     
     // Open drop-down to choose type of Decentraland asset
     await page2.waitForSelector('div[class="searchEstimateDappBox"]');
     await page2.click('div[class="searchEstimateDappBox"]');
 
+    
     await page.setRequestInterception(true);
 
     page.on('request', (request) => {
@@ -179,9 +133,6 @@ async function getNFT(){
             request.continue();
         }
     })
-
-    console.log(index);
-    nftIDs.push(index);
 
 
     
@@ -197,10 +148,8 @@ async function getNFT(){
     
     await page2.waitForSelector('div[id="CurrencyDropdownBtn"]');
 
+
     
-    //const x = "test"
-    // debugger;
-    // const index2 = 2;
     
     let loanEstimate = await page2.evaluate( async () => {
     
@@ -225,7 +174,7 @@ async function getNFT(){
         
     loansArray.push(loanEstimate);
 
-    //console.log(loanEstimate);
+
     }
 
     console.log(loansArray);

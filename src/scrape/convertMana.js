@@ -5,4 +5,4 @@ let convertMana = (str) => {
     return Number(value);
 };
 
-exports.convertMana;
+module.exports = convertMana;
