@@ -77,9 +77,9 @@ async function getNFT(){
     const page2 = await browser.newPage();
     
     // Intercept calls that load image, styles and font to improve bot performance
-    await page.setRequestInterception(true);
+    await page2.setRequestInterception(true);
 
-    page.on('request', (request) => {
+    page2.on('request', (request) => {
 
         if ( ['image','stylesheet','font'].includes(request.resourceType() ) ) {
             request.abort();
