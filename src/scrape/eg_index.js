@@ -11,9 +11,6 @@ const decentraland = 'https://nftfi.com/app/lend/assets?category=0xf87e31492faf9
 const nftBank = 'https://nftbank.ai/estimates';
 
 
-// Selector to find the Decentraland object in nftfi.com
-const dcSelector = '#root > div > div > div:nth-child(5) > main > ul > li:nth-child(1) > div > a';
-
 // Convert functions to handle the API responses within Puppeteer browser
 
 let currentNftID = () => {
@@ -33,7 +30,7 @@ async function getNFT(){
     const browser = await puppeteer.launch(
         
         {   
-            headless: true,
+            headless: false,
             defaultViewport: {
                 width: 1400,
                 height: 900,
@@ -45,14 +42,23 @@ async function getNFT(){
 
     const page = await browser.newPage();
 
+
+        await page.setRequestInterception(true);
+
+    page.on('request', (request) => {
+
+        if ( ['image','stylesheet','font'].includes(request.resourceType() ) ) {
+            request.abort();
+        } else {
+            request.continue();
+        }
+    })
+
     await page.goto(decentraland);
-    
-    await page.waitForSelector(dcSelector);
 
-    await page.exposeFunction('hrefArray',(arr) =>
-        hrefArray(arr));
 
-    await page.waitForSelector('a[class="asset__link"]')
+
+    await page.waitForSelector('a[class="asset__link"]');
  
 
 
@@ -113,66 +119,54 @@ async function getNFT(){
     
     for (let index of parcelID ) {
 
-    nftIDs.push(index); // push the Decentraland ID of the current loop into a global variable
-
-
-    await page2.type('input[class="MultiSearch__SearchInput-vmef37-4 WKTfL"]',index);
-    
-    // Open drop-down to choose type of Decentraland asset
-    await page2.waitForSelector('div[class="searchEstimateDappBox"]');
-    await page2.click('div[class="searchEstimateDappBox"]');
-
-    
-    await page.setRequestInterception(true);
-
-    page.on('request', (request) => {
-
-        if ( ['image','stylesheet','font'].includes(request.resourceType() ) ) {
-            request.abort();
-        } else {
-            request.continue();
-        }
-    })
-
-
-    
-    // Select type Parcel
-    await page2.waitForSelector('body > div.MuiPopover-root > div.MuiPaper-root.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded > div > ul > li:nth-child(1) > p');
-    await page2.click('body > div.MuiPopover-root > div.MuiPaper-root.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded > div > ul > li:nth-child(1) > p');
-    
-    // Search for asset with some timeouts to let the page2 load
-    await page2.waitForSelector('button[class="searchBtn"]');
-    await page2.waitForTimeout(3000);
-    
-    await page2.click('button[class="searchBtn"]');
-    
-    await page2.waitForSelector('div[id="CurrencyDropdownBtn"]');
-
-
-    
-    
-    let loanEstimate = await page2.evaluate( async () => {
-    
-        //Selectors
-        const manaSelector = '#__next > section > section.Layout__MainLayoutContainer-sc-1kezz9r-2.flTqTQ > section > div > main > section:nth-child(3) > section > article.DclParcelEstimate__EstimateBody-sc-1noyde4-3.bwqREQ > article.DclParcelEstimate__EstimatedPriceForm-sc-1noyde4-4.drwmyZ > div > h2';
-        const usdSelector = 'div[class="estimatePrice"]';
-        
-        let getInnerText = selector =>{
-            return document.querySelector(selector) ? document.querySelector(selector).innerText : false;
-        }
+        nftIDs.push(index); // push the Decentraland ID of the current loop into a global variable
         
         
-        return{
-                    manaEstimate: await convertMana(getInnerText(manaSelector)),
-                    usdEstimate: await convertUSD(getInnerText(usdSelector)),
-                    loan: await loanProposal(await convertUSD(getInnerText(usdSelector))),
-                    dcID: await currentNftID()
-                }
+        await page2.type('input[class="MultiSearch__SearchInput-vmef37-4 WKTfL"]',index);
+        
+        // Open drop-down to choose type of Decentraland asset
+        await page2.waitForSelector('div[class="searchEstimateDappBox"]');
+        await page2.click('div[class="searchEstimateDappBox"]');
+        
+        
+        
+        // Select type Parcel
+        await page2.waitForSelector('body > div.MuiPopover-root > div.MuiPaper-root.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded > div > ul > li:nth-child(1) > p');
+        await page2.click('body > div.MuiPopover-root > div.MuiPaper-root.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded > div > ul > li:nth-child(1) > p');
+        
+        // Search for asset with some timeouts to let the page2 load
+        await page2.waitForSelector('button[class="searchBtn"]');
+        await page2.waitForTimeout(3000);
+        
+        await page2.click('button[class="searchBtn"]');
+        
+        await page2.waitForSelector('div[id="CurrencyDropdownBtn"]');
+        
+        
+        
+        
+        let loanEstimate = await page2.evaluate( async () => {
+        
+            //Selectors
+            const manaSelector = '#__next > section > section.Layout__MainLayoutContainer-sc-1kezz9r-2.flTqTQ > section > div > main > section:nth-child(3) > section > article.DclParcelEstimate__EstimateBody-sc-1noyde4-3.bwqREQ > article.DclParcelEstimate__EstimatedPriceForm-sc-1noyde4-4.drwmyZ > div > h2';
+            const usdSelector = 'div[class="estimatePrice"]';
+            
+            let getInnerText = selector =>{
+                return document.querySelector(selector) ? document.querySelector(selector).innerText : false;
+            }
             
             
-        });
-        
-    loansArray.push(loanEstimate);
+            return{
+                        manaEstimate: await convertMana(getInnerText(manaSelector)),
+                        usdEstimate: await convertUSD(getInnerText(usdSelector)),
+                        loan: await loanProposal(await convertUSD(getInnerText(usdSelector))),
+                        dcID: await currentNftID()
+                    }
+                
+                
+            });
+            
+        loansArray.push(loanEstimate);
 
 
     }
