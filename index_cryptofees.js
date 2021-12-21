@@ -42,7 +42,7 @@ async function getPrices(){
 
     let historyPrices = [];
 
-    for (let i = 0; i<listOfDates.length; i++) {
+    for (let i = 0; i<listOfDates.length-1; i++) {
 
         const nameSelector = `#__next > div > main > div.jsx-2013905549.list > a:nth-child(2) > div.jsx-166918656.name > div`;
         const feesSelector = `#__next > div > main > div.jsx-2013905549.list > a:nth-child(2) > div:nth-child(2)`;
@@ -50,11 +50,25 @@ async function getPrices(){
         await page.goto(cryptofeesURL.concat(listOfDates[i]));
         await page.waitForSelector('div[class="jsx-2013905549 list"]');
 
-        
+        let date = listOfDates[i];
+        let protocol = await page.$eval(nameSelector, element => element.innerText);
+        let fees = await page.$eval(feesSelector, element => element.innerText);
+        let subArray = [];
 
-        
+        subArray.push(date);
+        subArray.push(protocol);
+        subArray.push(fees);
+
+        historyPrices.push(subArray);
+
+        // console.log(subArray);        
 
     }
+
+    console.log(historyPrices);
+
+    /*
+    debugger;
 
     await page.goto(cryptofeesURL);
 
@@ -269,6 +283,7 @@ async function getPrices(){
         
     //console.log(price);
     console.log("this is the array:", historyPrices);
+    */
     
     await browser.close();
     

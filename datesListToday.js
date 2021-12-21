@@ -17,7 +17,7 @@ const today = new Date();
 const formatted_today = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
 
 // Call the function from date in the past to today's date
-let daylist = getDaysArray(new Date("2021-12-18"), new Date(formatted_today) );
+let daylist = getDaysArray(new Date("2021-12-10"), new Date(formatted_today) );
 
 // Convert the format into one accepted by Dates scraper
 let daysRange = daylist.map( (v) => v.toISOString().slice(0,10));
