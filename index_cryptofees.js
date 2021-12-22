@@ -5,6 +5,7 @@ const { convertArrayToCSV } = require('convert-array-to-csv');
 const converter = require('convert-array-to-csv');
 const fs = require('fs-extra');
 const listOfDates = require('./listOfDates');
+const timeoutsValues = require('./timeoutsValues');
 
 // URLs to scrape
 // const cryptofeesURL = `https://cryptofees.info/history/2021-11-02`;
@@ -44,31 +45,54 @@ async function getPrices(){
 
     let historyPrices = [];
 
+    // const timeoutsValues = [
+    //     1300,
+    //     1200,
+    //     1500,
+    //     2200,
+    //     1300,
+    //     2200,
+    //     2000,
+    //     1550,
+    //     1250,
+    //     1100,
+    //     2100,
+    //     1900
+    // ]
+
     // Loop to get the protocol name and fees from 2 selectors
+    // Fist loop to go through all the dates
     for (let i = 0; i<listOfDates.length-1; i++) {
-        
+
         await page.goto(cryptofeesURL.concat(listOfDates[i]));
-        await page.waitForSelector('div[class="jsx-2013905549 list"]');
+        // await page.waitForSelector('div[class="jsx-2013905549 list"]');
+        await page.waitForTimeout(timeoutsValues[i]);
 
-        const nameSelector = `#__next > div > main > div.jsx-2013905549.list > a:nth-child(2) > div.jsx-166918656.name > div`;
-        const feesSelector = `#__next > div > main > div.jsx-2013905549.list > a:nth-child(2) > div:nth-child(2)`;
+        // scrape the top 30 protocols in each date
+        let topList = 10;
 
+        // This loop to go through the top protocols
+        for (let k = 2; k < topList+2 ; k++ ) {
+            
+            const nameSelector = `#__next > div > main > div.jsx-2013905549.list > a:nth-child(${k}) > div.jsx-166918656.name > div`;
+            const feesSelector = `#__next > div > main > div.jsx-2013905549.list > a:nth-child(${k}) > div:nth-child(2)`;
 
-        let date = listOfDates[i];
-        let protocol = await page.$eval(nameSelector, element => element.innerText);
-        let fees = await page.$eval(feesSelector, element => element.innerText);
-        let formatted_fees = fees.replaceAll(',', '').replace('$', '');
-        let fees_usd = formatted_fees.slice(0, (formatted_fees.length-3));
-        let subArray = [];
-
-        console.log(fees_usd);
-
-        subArray.push(date);
-        subArray.push(protocol);
-        subArray.push(fees_usd);
-
-        historyPrices.push(subArray);
-
+            let date = listOfDates[i];
+            let protocol = await page.$eval(nameSelector, element => element.innerText);
+            let fees = await page.$eval(feesSelector, element => element.innerText);
+            let formatted_fees = fees.replaceAll(',', '').replace('$', '');
+            let fees_usd = formatted_fees.slice(0, (formatted_fees.length-3));
+            let subArray = [];
+            
+            // console.log(fees_usd);
+            
+            subArray.push(date);
+            subArray.push(protocol);
+            subArray.push(fees_usd);
+            
+            historyPrices.push(subArray);
+        
+        }
         // console.log(subArray);        
 
     }
