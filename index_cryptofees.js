@@ -20,8 +20,7 @@ const header = ['date', 'protocol', 'daily_fees_usd'];
 
 async function getPrices(){
 
-    const browser = await puppeteer.launch(
-        
+    const browser = await puppeteer.launch( 
         {   
             headless: true,
             defaultViewport: {
@@ -30,7 +29,6 @@ async function getPrices(){
                 deviceScaleFactor: 1,
             }
         }
-
     );
 
     let historyPrices = [];
@@ -38,7 +36,6 @@ async function getPrices(){
     const page = await browser.newPage();
 
     await page.setRequestInterception(true);
-
     page.on('request', (request) => {
 
         if ( ['image','stylesheet','font'].includes(request.resourceType() ) ) {
