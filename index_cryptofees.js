@@ -23,7 +23,7 @@ async function getPrices(){
     const browser = await puppeteer.launch(
         
         {   
-            headless: false,
+            headless: true,
             defaultViewport: {
                 width: 1400,
                 height: 900,
