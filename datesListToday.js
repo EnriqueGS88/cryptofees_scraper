@@ -14,13 +14,14 @@ let getDaysArray = function(start, end) {
 
 // Get today's date in the right format
 const today = new Date();
-const formatted_today = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+const formatted_today = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate()-1;
 
 // Call the function from date in the past to today's date
-let daylist = getDaysArray(new Date("2021-08-01"), new Date(formatted_today) );
+let daylist = getDaysArray(new Date("2021-12-15"), new Date(formatted_today) );
 
 // Convert the format into one accepted by Dates scraper
 let daysRange = daylist.map( (v) => v.toISOString().slice(0,10));
+console.log("Number of Dates: ", daysRange.length);
 let days = daysRange.toString().replaceAll(',','","');
 
 // Convert format into a String that can be saved to a file
