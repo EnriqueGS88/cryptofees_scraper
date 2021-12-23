@@ -6,6 +6,10 @@ const converter = require('convert-array-to-csv');
 const fs = require('fs-extra');
 const listOfDates = require('./listOfDates');
 const timeoutsValues = require('./timeoutsValues');
+require('dotenv').config();
+const USERNAME = process.env.USERNAME;
+
+console.log(USERNAME);
 
 // URLs to scrape
 const cryptofeesURL = `https://cryptofees.info/history/`;
