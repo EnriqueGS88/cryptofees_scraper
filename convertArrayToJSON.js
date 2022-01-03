@@ -1,14 +1,9 @@
 const listOfDates = require('./listOfDates');
 
-
 // Convert Arrays to JSON with properties
 const months = ["January", "February", "March", "April", "May", "June", "July"];
 const uniData = [0, 10, 15, 20, 25, 30, 35];
 const sushiData = [5, 15, 20, 17, 28, 29, 40];
-
-let testArray = [];
-let Ethereum = [];
-let Uniswap = [];
 
 let scrapeData = [
     [ '2021-12-31', 'Ethereum', '34347395' ],
@@ -41,13 +36,46 @@ let scrapeData = [
     [ '2022-01-01', 'Trader_Joe', '559551' ],
     [ '2022-01-01', 'Bitcoin', '437068' ],
     [ '2022-01-01', 'MakerDAO', '391062' ]
-]
+];
 
-var data = ["A123,G,2323232", "F345,G,345667", "T677,G,-34343", "G454,G,4343", ""],
+const jsonFile = {
+    "ethereumArray": [{
+       date: '2021-12-29',
+       fee: 100
+    }, {
+        date: '2021-12-30',
+        fee: 110
+    }, {
+        date: '2021-12-31',
+        fee: 250
+    }],
+    "sushiArray": [{
+        date: '2021-12-29',
+        fee: 50
+     }, {
+         date: '2021-12-30',
+         fee: 195
+     }, {
+         date: '2021-12-31',
+         fee: 70
+     }],
+     "uniArray": [{
+        date: '2021-12-29',
+        fee: 50
+     }, {
+         date: '2021-12-30',
+         fee: 110
+     }, {
+         date: '2021-12-31',
+         fee: 280
+     }]
+};
+
+let data = ["A123,G,2323232", "F345,G,345667", "T677,G,-34343", "G454,G,4343", ""],
     result = data
         .filter(Boolean)
         .map(s => {
-            var [UserId, Type, Values] = s.match(/[^,]+/g);
+            let [UserId, Type, Values] = s.match(/[^,]+/g);
             return { UserId, Type, Values };
         });
                 

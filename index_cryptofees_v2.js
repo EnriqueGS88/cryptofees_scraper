@@ -88,7 +88,7 @@ async function getPrices(){
         }
 
         // This loop to go through the top protocols
-        for (let k = 2; k < topList+2 ; k++ ) {
+        for ( let k = 2; k < topList+2 ; k++ ) {
             
             const nameSelector = `#__next > div > main > div.jsx-2013905549.list > a:nth-child(${k}) > div.jsx-166918656.name > div`;
             const feesSelector = `#__next > div > main > div.jsx-2013905549.list > a:nth-child(${k}) > div:nth-child(2)`;
