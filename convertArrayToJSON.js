@@ -71,15 +71,23 @@ const jsonFile = {
      }]
 };
 
-let data = ["A123,G,2323232", "F345,G,345667", "T677,G,-34343", "G454,G,4343", ""],
-    result = data
-        .filter(Boolean)
-        .map(s => {
-            let [UserId, Type, Values] = s.match(/[^,]+/g);
-            return { UserId, Type, Values };
-        });
+let data = ["A123,G,2323232", null, "F345,G,345667", "T677,G,-34343", "G454,G,4343", ""],
+
+result = data
+    .filter(Boolean)
+    .map(s => {
+        let [UserId, Type, Values] = s.match(/[^,]+/g);
+        return { UserId, Type, Values };
+});
                 
-console.log(result);
+// console.log(result);
+
+let converted = scrapeData.map( s => {
+    // let [date, protocol, fee] = s.match( /[^,]+/g );
+    return { date: s, protocol: s[1], fee: s[2]};
+});
+
+console.log(converted);
 
 
 
