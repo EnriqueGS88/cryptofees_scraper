@@ -16,8 +16,8 @@ let scrapeData = [
     [ '2021-12-31', 'Compound', '728653' ],
     [ '2021-12-31', 'Balancer', '645590' ],
     [ '2021-12-31', 'Quickswap', '423483' ]
-    [ '2021-12-31', 'Ethereum', '34347395' ],
-    [ '2021-12-31', 'Uniswap', '4027706' ],
+    [ '2021-12-31', 'Ethereum', '12345678' ],
+    [ '2021-12-31', 'Uniswap', '90123456' ],
     [ '2021-12-31', 'Binance_Smart_Chain', '2574232' ],
     [ '2021-12-31', 'SushiSwap', '1289752' ],
     [ '2021-12-31', 'Aave', '1139513' ],
@@ -25,17 +25,7 @@ let scrapeData = [
     [ '2021-12-31', 'Trader_Joe', '796024' ],
     [ '2021-12-31', 'Compound', '728653' ],
     [ '2021-12-31', 'Balancer', '645590' ],
-    [ '2021-12-31', 'Quickswap', '423483' ],
-    [ '2022-01-01', 'Ethereum', '30741693' ],
-    [ '2022-01-01', 'Uniswap', '3115069' ],
-    [ '2022-01-01', 'Binance_Smart_Chain', '2303642' ],
-    [ '2022-01-01', 'SushiSwap', '1279710' ],
-    [ '2022-01-01', 'Abracadabra_money', '1169820' ],
-    [ '2022-01-01', 'Aave', '1084302' ],
-    [ '2022-01-01', 'Compound', '732881' ],
-    [ '2022-01-01', 'Trader_Joe', '559551' ],
-    [ '2022-01-01', 'Bitcoin', '437068' ],
-    [ '2022-01-01', 'MakerDAO', '391062' ]
+    [ '2021-12-31', 'Quickswap', '423483' ]
 ];
 
 const jsonFile = {
@@ -82,12 +72,49 @@ result = data
                 
 // console.log(result);
 
-let converted = scrapeData.map( s => {
-    // let [date, protocol, fee] = s.match( /[^,]+/g );
-    return { date: s, protocol: s[1], fee: s[2]};
-});
+// let converted = scrapeData.map( s => {
+//     // let [date, protocol, fee] = s.match( /[^,]+/g );
+//     return { date: s, protocol: s[0][1], fee: s[0][2]};
+// });
 
-console.log(converted);
+// console.log( scrapeData[0][1] );
+
+let ethereumData = [];
+let uniswapData = [];
+let jsonOutput = {
+    "ethereumData": [],
+    "uniswapData": []
+};
+
+let mapProtocolToJSON = ( data, row ) => {
+    if ( data[row][1] == 'Ethereum' ) {
+
+        let object = { "date": data[row][0], "fee": data[row][2] };
+        jsonOutput.ethereumData.push( object );
+
+    } else {
+
+        if ( data[row][1] == 'Uniswap' ) {
+
+            let object = { "date": data[row][0], "fee": data[row][2] };
+            jsonOutput.uniswapData.push( object );
+            
+        } else {
+            console.log( 'nothing' )
+        }
+        
+    }
+}
+
+for ( let i = 0; i < 2; i++) {
+    
+    mapProtocolToJSON( scrapeData, i )
+    
+}
+
+console.log( jsonOutput );
+
+
 
 
 
