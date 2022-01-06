@@ -1,18 +1,21 @@
 const scrapeData = require("./scrapeData");
+const protocols = require("./listOfProtocols");
 
 // Define structure for the output json
+// In this data structure the scraped data will be stored
 let jsonOutput = {
     "ethereumData": [],
     "uniswapData": [],
     "binance_Smart_ChainData": [],
+    "sushiswapData": [],
+    "aaveData": [],
+    "bitcoinData": [],
+    "trader_JoeData": [],
+    "compoundData": [],
+    "balancerData": [],
+    "quickswapData": [],
 };
 
-// List the buckets/protocols that will receive the mapped data
-let protocols = [
-    'Ethereum',
-    'Uniswap',
-    'Binance_Smart_Chain',
-];
 
 let ethereumPush = ( obj ) => {
     jsonOutput.ethereumData.push( obj );
@@ -26,10 +29,45 @@ let binanceSmartChainPush = ( obj ) => {
     jsonOutput.binance_Smart_ChainData.push( obj );
 }
 
+let sushiswapPush = ( obj ) => {
+    jsonOutput.sushiswapData.push( obj );
+}
+
+let aavePush = ( obj ) => {
+    jsonOutput.aaveData.push( obj );
+}
+
+let bitcoinPush = ( obj ) => {
+    jsonOutput.bitcoinData.push( obj );
+}
+
+let trader_JoePush = ( obj ) => {
+    jsonOutput.trader_JoeData.push( obj );
+}
+
+let compoundPush = ( obj ) => {
+    jsonOutput.compoundData.push( obj );
+}
+
+let balancerPush = ( obj ) => {
+    jsonOutput.balancerData.push( obj );
+}
+
+let quickswapPush = ( obj ) => {
+    jsonOutput.quickswapData.push( obj );
+}
+
 const arrayOfFunctions = [
     ethereumPush,
     uniswapPush,
     binanceSmartChainPush,
+    sushiswapPush,
+    aavePush,
+    bitcoinPush,
+    trader_JoePush,
+    compoundPush,
+    balancerPush,
+    quickswapPush,
 ];
 
 // 1) Loop to call function from an Array
@@ -57,11 +95,11 @@ let mapProtocolToJSON = ( data, row ) => {
 
 }
 
-for ( let r = 0; r < 3; r++) {
+for ( let r = 0; r < scrapeData.length; r++) {
     mapProtocolToJSON( scrapeData, r)
 }                       
                         
-// console.log( jsonOutput );
+console.log( jsonOutput );
 
 
 let getProtocols = [];
