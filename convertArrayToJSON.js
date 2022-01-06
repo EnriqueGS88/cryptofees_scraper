@@ -86,7 +86,7 @@ let mapProtocolToJSON = ( data, row ) => {
                 jsonOutput.binance_Smart_ChainData.push( object );
                 
             } else {
-                console.log( 'n/a' )
+                // console.log( 'n/a' )
             }
         }
     }
