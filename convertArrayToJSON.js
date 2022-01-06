@@ -121,7 +121,6 @@ let mapProtocolToJSON = (data, row ) => {
     let funcFromArray = arrayOfFunctions[protocolIndex];
     funcFromArray( object )
 
-
 }
 
 // Loop to evaluate each position in the scrapeData

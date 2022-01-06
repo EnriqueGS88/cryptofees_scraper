@@ -60,32 +60,19 @@ async function getPrices(){
         // scrape the top 30 protocols in each date
         let topList = 10;
 
-        // List of potential protocols
-        let Ethereum = [];
-        let Uniswap = [];
-        let Binance_Smart_Chain = [];
-        let Abracadabra_money = [];
-        let Trader_Joe = [];
-        let SushiSwap = [];
-        let Aave = [];
-        let Terraswap = [];
-        let Bitcion = [];
-        let Compound = [];
-        let MakerDao = [];
-        let Avalanche = [];
+        // Turn on snippet to create a JSON object to store scraped data
+        // let historyObject = {
+        //     scrape: []
+        // };
 
-        let historyObject = {
-            scrape: []
-        };
+        // let createObject = function ( d, p, f ) {
+        //     return {
+        //         date: d,
+        //         protocol: p,
+        //         fee: f
+        //     }
 
-        let createObject = function ( d, p, f ) {
-            return {
-                date: d,
-                protocol: p,
-                fee: f
-            }
-
-        }
+        // }
 
         // This loop to go through the top protocols
         for ( let k = 2; k < topList+2 ; k++ ) {
@@ -102,21 +89,20 @@ async function getPrices(){
 
             // Use the following snippet instead to prepare a CSV output
 
-            // let subArray = [];
-            // subArray.push(date);
-            // subArray.push(formatProtocol);
-            // subArray.push(fees_usd);            
-            // historyPrices.push(subArray);
+            let subArray = [];
+            subArray.push(date);
+            subArray.push(formatProtocol);
+            subArray.push(fees_usd);            
+            historyPrices.push(subArray);
             
-            let scrapedObject = createObject(date, formatProtocol, fees_usd);
-
-            historyObject['scrape'].push(scrapedObject);
-
+            // Use the following snippet to create a JSON object instead
+            // let scrapedObject = createObject(date, formatProtocol, fees_usd);
+            // historyObject['scrape'].push(scrapedObject);
             // console.log(scrapedObject);
         
         }    
 
-        console.log(historyObject);
+        console.log(historyPrices);
 
     }
 
