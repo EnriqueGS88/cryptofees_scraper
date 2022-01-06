@@ -1,3 +1,5 @@
+const scrapeData = require("./scrapeData");
+
 // Define structure for the output json
 let jsonOutput = {
     "ethereumData": [],
@@ -24,33 +26,40 @@ let binanceSmartChainPush = ( obj ) => {
     jsonOutput.binance_Smart_ChainData.push( obj );
 }
 
-let arrayOfFunctions = [
-
+const arrayOfFunctions = [
+    ethereumPush,
+    uniswapPush,
+    binanceSmartChainPush,
 ];
 
+// Loop to call function from an Array
+// for ( let i = 0; i < arrayOfFunctions.length; i++ ) {
+//     let object = 2
+//     const func = arrayOfFunctions[i];
+//     func(object);
+// };
+
+// // ForEach loop to call functions from an Array
+// arrayOfFunctions.forEach( (func) => {
+//     let object = 2
+//     func(object);
+// });
 
 let mapProtocolToJSON = ( data, row ) => {
 
-    if ( data[row][1] == 'Ethereum' ) {
+    let object = { "date": data[row][0], "fee": data[row][2] };
+    let thisProtocol = data[row][1];
+    let protocolIndex = protocols.indexOf( thisProtocol );
 
-        let object = { "date": data[row][0], "fee": data[row][2] };
-        jsonOutput.ethereumData.push( object );
+    let funcFromArray = arrayOfFunctions[protocolIndex];
+    funcFromArray( object );
 
-    } else {
-
-        if ( data[row][1] == 'Uniswap' ) {
-
-            let object = { "date": data[row][0], "fee": data[row][2] };
-            jsonOutput.uniswapData.push( object );
-            
-        } else {
-
-            if ( data[row][1] == 'Binance_Smart_Chain' ) {
-
-                let object = { "date": data[row][0], "fee": data[row][2] };
-                jsonOutput.binance_Smart_ChainData.push( object );
-                
-            } else { }
-        }
-    }
 }
+
+// mapProtocolToJSON( scrapeData, 11 )
+
+for ( let r = 0; r < 3; r++) {
+    mapProtocolToJSON( scrapeData, r)
+}                       
+                        
+console.log( jsonOutput );
