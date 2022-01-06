@@ -1,6 +1,7 @@
 // Convert Arrays to JSON with properties
 const listOfDates = require('./listOfDates');
 const scrapeData = require( './scrapeData' );
+const protocols = require('./listOfProtocols');
 
 const months = ["January", "February", "March", "April", "May", "June", "July"];
 const uniData = [0, 10, 15, 20, 25, 30, 35];
@@ -38,67 +39,98 @@ const jsonFile = {
      }]
 };
 
-// Split the array positions by the comma in the string
-let data = ["A123,G,2323232", null, "F345,G,345667", "T677,G,-34343", "G454,G,4343", ""],
-
-result = data
-    .filter(Boolean)
-    .map(s => {
-        let [UserId, Type, Values] = s.match(/[^,]+/g);
-        return { UserId, Type, Values };
-});                
-// console.log(result);
-
-
 // Define structure for the output json
+// In this data structure the scraped data will be stored
 let jsonOutput = {
     "ethereumData": [],
     "uniswapData": [],
     "binance_Smart_ChainData": [],
+    "sushiswapData": [],
+    "aaveData": [],
+    "bitcoinData": [],
+    "trader_JoeData": [],
+    "compoundData": [],
+    "balancerData": [],
+    "quickswapData": [],
 };
 
-// List the buckets/protocols that will receive the mapped data
-let protocols = [
-    'Ethereum',
-    'Uniswap',
-    'Binance_Smart_Chain',
-]
+// List of Functions to be called according to the type of data being scraped
 
-let mapProtocolToJSON = ( data, row ) => {
-
-    if ( data[row][1] == 'Ethereum' ) {
-
-        let object = { "date": data[row][0], "fee": data[row][2] };
-        jsonOutput.ethereumData.push( object );
-
-    } else {
-
-        if ( data[row][1] == 'Uniswap' ) {
-
-            let object = { "date": data[row][0], "fee": data[row][2] };
-            jsonOutput.uniswapData.push( object );
-            
-        } else {
-
-            if ( data[row][1] == 'Binance_Smart_Chain' ) {
-
-                let object = { "date": data[row][0], "fee": data[row][2] };
-                jsonOutput.binance_Smart_ChainData.push( object );
-                
-            } else {
-                // console.log( 'n/a' )
-            }
-        }
-    }
+let ethereumPush = ( obj ) => {
+    jsonOutput.ethereumData.push( obj );
 }
 
-// Evaluate each node in the scrapeData
-// Map it to the corresponding protocol array in the json output file
+let uniswapPush = ( obj ) => {
+    jsonOutput.uniswapData.push( obj );
+}
+
+let binanceSmartChainPush = ( obj ) => {
+    jsonOutput.binance_Smart_ChainData.push( obj );
+}
+
+let sushiswapPush = ( obj ) => {
+    jsonOutput.sushiswapData.push( obj );
+}
+
+let aavePush = ( obj ) => {
+    jsonOutput.aaveData.push( obj );
+}
+
+let bitcoinPush = ( obj ) => {
+    jsonOutput.bitcoinData.push( obj );
+}
+
+let trader_JoePush = ( obj ) => {
+    jsonOutput.trader_JoeData.push( obj );
+}
+
+let compoundPush = ( obj ) => {
+    jsonOutput.compoundData.push( obj );
+}
+
+let balancerPush = ( obj ) => {
+    jsonOutput.balancerData.push( obj );
+}
+
+let quickswapPush = ( obj ) => {
+    jsonOutput.quickswapData.push( obj );
+}
+
+// Array that stores the functions that will be called
+const arrayOfFunctions = [
+    ethereumPush,
+    uniswapPush,
+    binanceSmartChainPush,
+    sushiswapPush,
+    aavePush,
+    bitcoinPush,
+    trader_JoePush,
+    compoundPush,
+    balancerPush,
+    quickswapPush,
+];
+
+// Main function that calls the other functions in the Array
+// It maps the scraped data to the corresponding array within the jsonOutput object
+let mapProtocolToJSON = (data, row ) => {
+
+    let object = { "date": data[row][0], "fee": Number( data[row][2] ) };
+    let thisProtocol = data[row][1];
+    let protocolIndex = protocols.indexOf( thisProtocol );
+
+    let funcFromArray = arrayOfFunctions[protocolIndex];
+    funcFromArray( object )
+
+
+}
+
+// Loop to evaluate each position in the scrapeData
 for ( let r = 0; r < scrapeData.length ; r++ ) {
     mapProtocolToJSON( scrapeData, r );
 }
 
 console.log( jsonOutput );
+
 
 
 

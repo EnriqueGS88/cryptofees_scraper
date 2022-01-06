@@ -70,18 +70,20 @@ const arrayOfFunctions = [
     quickswapPush,
 ];
 
+
+
 // 1) Loop to call function from an Array
-// for ( let i = 0; i < arrayOfFunctions.length; i++ ) {
-//     let object = 2
-//     const func = arrayOfFunctions[i];
-//     func(object);
-// };
+for ( let i = 0; i < arrayOfFunctions.length; i++ ) {
+    let object = 2
+    const func = arrayOfFunctions[i];
+    func(object);
+};
 
 // 2) ForEach loop to call functions from an Array
-// arrayOfFunctions.forEach( (func) => {
-//     let object = 2
-//     func(object);
-// });
+arrayOfFunctions.forEach( (func) => {
+    let object = 2
+    func(object);
+});
 
 // 3) Embed the above to call it with arguments
 let mapProtocolToJSON = ( data, row ) => {
@@ -100,19 +102,3 @@ for ( let r = 0; r < scrapeData.length; r++) {
 }                       
                         
 console.log( jsonOutput );
-
-
-let getProtocols = [];
-
-scrapeData.forEach( (day) => {
-    if ( getProtocols.indexOf( day[1] ) >= 0 ) {      
-    
-    } else {
-        
-        getProtocols.push( day[1] );
-
-    }
-
-})
-
-console.log( getProtocols );
