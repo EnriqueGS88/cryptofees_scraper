@@ -32,34 +32,49 @@ const arrayOfFunctions = [
     binanceSmartChainPush,
 ];
 
-// Loop to call function from an Array
+// 1) Loop to call function from an Array
 // for ( let i = 0; i < arrayOfFunctions.length; i++ ) {
 //     let object = 2
 //     const func = arrayOfFunctions[i];
 //     func(object);
 // };
 
-// // ForEach loop to call functions from an Array
+// 2) ForEach loop to call functions from an Array
 // arrayOfFunctions.forEach( (func) => {
 //     let object = 2
 //     func(object);
 // });
 
+// 3) Embed the above to call it with arguments
 let mapProtocolToJSON = ( data, row ) => {
 
     let object = { "date": data[row][0], "fee": data[row][2] };
     let thisProtocol = data[row][1];
     let protocolIndex = protocols.indexOf( thisProtocol );
 
-    let funcFromArray = arrayOfFunctions[protocolIndex];
+    let funcFromArray = arrayOfFunctions[ protocolIndex ];
     funcFromArray( object );
 
 }
-
-// mapProtocolToJSON( scrapeData, 11 )
 
 for ( let r = 0; r < 3; r++) {
     mapProtocolToJSON( scrapeData, r)
 }                       
                         
-console.log( jsonOutput );
+// console.log( jsonOutput );
+
+
+let getProtocols = [];
+
+scrapeData.forEach( (day) => {
+    if ( getProtocols.indexOf( day[1] ) >= 0 ) {      
+    
+    } else {
+        
+        getProtocols.push( day[1] );
+
+    }
+
+})
+
+console.log( getProtocols );
