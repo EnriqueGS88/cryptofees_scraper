@@ -1,4 +1,5 @@
 // Get all fees produced per protocol from cryptofees.info
+// Save output in a module.exports Array Format
 
 const puppeteer = require('puppeteer');
 const { convertArrayToCSV } = require('convert-array-to-csv');
@@ -13,7 +14,7 @@ const USERNAME = process.env.USERNAME;
 // const cryptofeesURL = `https://cryptofees.info/history/2021-11-02`;
 const cryptofeesURL = `https://cryptofees.info/history/`;
 
-const header = ['date', 'protocol', 'daily_fees_usd'];
+// const header = ['date', 'protocol', 'daily_fees_usd'];
 
 // Main Async function to scrape cryptofees.info
 async function getPrices(){
@@ -54,6 +55,7 @@ async function getPrices(){
         let topList = 10;
 
         // This loop to go through the top protocols
+        // i = picks the date from listOfDates
         for ( let k = 2; k < topList+2 ; k++ ) {
             
             const nameSelector = `#__next > div > main > div.jsx-2013905549.list > a:nth-child(${k}) > div.jsx-166918656.name > div`;
@@ -74,19 +76,21 @@ async function getPrices(){
             historyPrices.push(subArray);
             
         }    
-
-        console.log(historyPrices);
-
+        // console.log(historyPrices);
     }
 
-    const csvFromArrayOfArrays = convertArrayToCSV(historyPrices, {
-        header,
-        separator: ','
-    });
+    // Build string output
+    const outputScrape = "module.exports = [ " + JSON.stringify( historyPrices ) + " ]";
+    console.log(outputScrape);
+
+    // const csvFromArrayOfArrays = convertArrayToCSV(historyPrices, {
+    //     header,
+    //     separator: ','
+    // });
     
     async function example(f) {
         try{
-            await fs.outputFile(f, csvFromArrayOfArrays);
+            await fs.outputFile(f, outputScrape);
             const data = await fs.readFile(f, 'utf8');
             // console.log(data);
         } catch (err) {
@@ -99,7 +103,7 @@ async function getPrices(){
     .replaceAll(':', '')
     .replaceAll(', ', '_');
 
-    let file = `./output/cryptofees_scrape_${scrapeTime}`;
+    let file = `./output/cryptofees_scrape_${scrapeTime}.js`;
     example(file);
 
     await browser.close();
