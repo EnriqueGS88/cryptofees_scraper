@@ -80,7 +80,7 @@ async function getPrices(){
     }
 
     // Build string output
-    const outputScrape = "module.exports = [ " + JSON.stringify( historyPrices ) + " ]";
+    const outputScrape = "module.exports = " + JSON.stringify( historyPrices ) + " ";
     console.log(outputScrape);
 
     // const csvFromArrayOfArrays = convertArrayToCSV(historyPrices, {

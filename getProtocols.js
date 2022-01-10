@@ -1,7 +1,7 @@
 // Get all protocols from Scrape Data without Duplicates
 // Store an array in listOfProtocols.js
 
-const scrapeData = require('./scrapeData')
+const scrapeData = require('./output/cryptofees_scrape_10012022')
 
 let getProtocols = [];
 

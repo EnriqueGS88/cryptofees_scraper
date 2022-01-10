@@ -1,6 +1,6 @@
 // Convert Arrays to JSON with properties
 const listOfDates = require('./listOfDates');
-const scrapeData = require( './scrapeData' );
+const scrapeData = require( './output/cryptofees_scrape_10012022' );
 const protocols = require('./listOfProtocols');
 
 const months = ["January", "February", "March", "April", "May", "June", "July"];
