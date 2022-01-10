@@ -1,43 +1,44 @@
-// Convert Arrays to JSON with properties
-const listOfDates = require('./listOfDates');
+// Convert Arrays to JSON and save it to a File
+// const listOfDates = require('./listOfDates');
 const scrapeData = require( './output/cryptofees_scrape_10012022' );
 const protocols = require('./listOfProtocols');
+const fs = require('fs-extra');
 
-const months = ["January", "February", "March", "April", "May", "June", "July"];
-const uniData = [0, 10, 15, 20, 25, 30, 35];
-const sushiData = [5, 15, 20, 17, 28, 29, 40];
-const jsonFile = {
-    "ethereumArray": [{
-       date: '2021-12-29',
-       fee: 100
-    }, {
-        date: '2021-12-30',
-        fee: 110
-    }, {
-        date: '2021-12-31',
-        fee: 250
-    }],
-    "sushiArray": [{
-        date: '2021-12-29',
-        fee: 50
-     }, {
-         date: '2021-12-30',
-         fee: 195
-     }, {
-         date: '2021-12-31',
-         fee: 70
-     }],
-     "uniArray": [{
-        date: '2021-12-29',
-        fee: 50
-     }, {
-         date: '2021-12-30',
-         fee: 110
-     }, {
-         date: '2021-12-31',
-         fee: 280
-     }]
-};
+// const months = ["January", "February", "March", "April", "May", "June", "July"];
+// const uniData = [0, 10, 15, 20, 25, 30, 35];
+// const sushiData = [5, 15, 20, 17, 28, 29, 40];
+// const jsonFile = {
+//     "ethereumArray": [{
+//        date: '2021-12-29',
+//        fee: 100
+//     }, {
+//         date: '2021-12-30',
+//         fee: 110
+//     }, {
+//         date: '2021-12-31',
+//         fee: 250
+//     }],
+//     "sushiArray": [{
+//         date: '2021-12-29',
+//         fee: 50
+//      }, {
+//          date: '2021-12-30',
+//          fee: 195
+//      }, {
+//          date: '2021-12-31',
+//          fee: 70
+//      }],
+//      "uniArray": [{
+//         date: '2021-12-29',
+//         fee: 50
+//      }, {
+//          date: '2021-12-30',
+//          fee: 110
+//      }, {
+//          date: '2021-12-31',
+//          fee: 280
+//      }]
+// };
 
 // Define structure for the output json
 // In this data structure the scraped data will be stored
@@ -159,7 +160,27 @@ for ( let r = 0; r < scrapeData.length ; r++ ) {
     mapProtocolToJSON( scrapeData, r );
 }
 
-console.log( jsonOutput );
+// console.log( jsonOutput );
+
+const jsonFile = 'module.exports = ' + JSON.stringify(jsonOutput);
+console.log(jsonFile)
+
+async function saveFile(f, d) {
+
+    try {
+        await fs.outputFile(f, d);
+        const data = await fs.readFile(d, 'utf8');
+        // console.log(data);
+    } catch(e) {
+        console.error(e);
+    }
+
+
+}
+
+const filePath = './output/jsonFile.js'
+
+saveFile(filePath, jsonFile);
 
 
 
