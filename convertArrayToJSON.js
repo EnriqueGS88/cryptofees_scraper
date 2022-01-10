@@ -51,6 +51,11 @@ let jsonOutput = {
     "trader_JoeData": [],
     "compoundData": [],
     "balancerData": [],
+    "terraswapData": [],
+    "makerDAOData": [],
+    "avalancheData": [],
+    "abracadabra_moneyData": [],
+    "spookyswapData": [],
     "quickswapData": [],
 };
 
@@ -92,21 +97,47 @@ let balancerPush = ( obj ) => {
     jsonOutput.balancerData.push( obj );
 }
 
+let terraswapPush = ( obj ) => {
+    jsonOutput.terraswapData.push( obj );
+}
+
+let makerDAOPush = ( obj ) => {
+    jsonOutput.makerDAOData.push( obj );
+}
+
+let avalanchePush = ( obj ) => {
+    jsonOutput.avalancheData.push( obj );
+}
+
+let abracadabra_moneyPush = ( obj ) => {
+    jsonOutput.abracadabra_moneyData.push( obj );
+}
+
+let spookyswapPush = ( obj ) => {
+    jsonOutput.spookyswapData.push( obj );
+}
+
 let quickswapPush = ( obj ) => {
     jsonOutput.quickswapData.push( obj );
 }
+
 
 // Array that stores the functions that will be called
 const arrayOfFunctions = [
     ethereumPush,
     uniswapPush,
     binanceSmartChainPush,
-    sushiswapPush,
-    aavePush,
-    bitcoinPush,
     trader_JoePush,
+    aavePush,
+    sushiswapPush,
     compoundPush,
+    bitcoinPush,
     balancerPush,
+    terraswapPush,
+    makerDAOPush,
+    avalanchePush,
+    abracadabra_moneyPush,
+    spookyswapPush,
     quickswapPush,
 ];
 

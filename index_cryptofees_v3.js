@@ -1,6 +1,4 @@
 // Get all fees produced per protocol from cryptofees.info
-// Save the scraped data into an array of arrays
-// Store same output as a CSV in ./output
 
 const puppeteer = require('puppeteer');
 const { convertArrayToCSV } = require('convert-array-to-csv');
@@ -11,20 +9,16 @@ const timeoutsValues = require('./timeoutsValues');
 require('dotenv').config();
 const USERNAME = process.env.USERNAME;
 
-// console.log(USERNAME);
-
 // URLs to scrape
 // const cryptofeesURL = `https://cryptofees.info/history/2021-11-02`;
 const cryptofeesURL = `https://cryptofees.info/history/`;
 
 const header = ['date', 'protocol', 'daily_fees_usd'];
 
-// Main Async function to scrape both sites
-
+// Main Async function to scrape cryptofees.info
 async function getPrices(){
 
     const browser = await puppeteer.launch(
-        
         {   
             headless: false,
             defaultViewport: {
@@ -33,13 +27,11 @@ async function getPrices(){
                 deviceScaleFactor: 1,
             }
         }
-
     );
 
     const page = await browser.newPage();
 
     await page.setRequestInterception(true);
-
     page.on('request', (request) => {
 
         if ( ['image','stylesheet','font'].includes(request.resourceType() ) ) {
@@ -56,25 +48,10 @@ async function getPrices(){
     for (let i = 0; i<listOfDates.length-1; i++) {
 
         await page.goto(cryptofeesURL.concat(listOfDates[i]));
-        // await page.waitForSelector('div[class="jsx-2013905549 list"]');
         await page.waitForTimeout(timeoutsValues[i]);
 
-        // scrape the top 30 protocols in each date
+        // scrape the top 10 protocols in each date
         let topList = 10;
-
-        // Turn on snippet to create a JSON object to store scraped data
-        // let historyObject = {
-        //     scrape: []
-        // };
-
-        // let createObject = function ( d, p, f ) {
-        //     return {
-        //         date: d,
-        //         protocol: p,
-        //         fee: f
-        //     }
-
-        // }
 
         // This loop to go through the top protocols
         for ( let k = 2; k < topList+2 ; k++ ) {
@@ -96,11 +73,6 @@ async function getPrices(){
             subArray.push(fees_usd);            
             historyPrices.push(subArray);
             
-            // Use the following snippet to create a JSON object instead
-            // let scrapedObject = createObject(date, formatProtocol, fees_usd);
-            // historyObject['scrape'].push(scrapedObject);
-            // console.log(scrapedObject);
-        
         }    
 
         console.log(historyPrices);
